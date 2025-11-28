@@ -1,39 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Simple AR Chair Viewer</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
   <style>
-    body{margin:0;text-align:center;font-family:Arial,sans-serif}
-    model-viewer{width:100%;height:600px;background:#f0f0f0;display:none}
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    model-viewer {
+      width: 100vw;
+      height: 100vh;
+      background: #f0f0f0;
+      position: relative;
+      display: block;
+    }
+
+    /* Big, intuitive AR button inside the viewer */
+    #ar-cta {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 20px;
+      padding: 14px 24px;
+      border-radius: 999px;
+      border: none;
+      font-size: 1rem;
+      font-weight: 600;
+      background: #111;
+      color: #fff;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+      cursor: pointer;
+      animation: pulse 1.6s infinite;
+      white-space: nowrap;
+    }
+
+    #ar-cta:active {
+      transform: translateX(-50%) scale(0.98);
+    }
+
+    @keyframes pulse {
+      0%   { transform: translateX(-50%) scale(1); }
+      50%  { transform: translateX(-50%) scale(1.03); }
+      100% { transform: translateX(-50%) scale(1); }
+    }
+
+    /* Hide default tiny AR button */
+    model-viewer::part(default-ar-button) {
+      display: none;
+    }
   </style>
 </head>
 <body>
 
-<h1>Launching AR Mode…</h1>
-
-<!-- 3D Model Viewer (hidden until AR starts) -->
 <model-viewer id="ar-model"
-  src="3Dimage1_atlas.glb"         
+  src="3Dimage1_atlas.glb"
   alt="3D model of an office chair"
   ar
   ar-modes="webxr scene-viewer quick-look"
-  scale="0.5 0.5 0.5"
   camera-controls
-  auto-rotate>
+  auto-rotate
+  scale="0.5 0.5 0.5">
+
+  <!-- Single, intuitive click target -->
+  <button slot="ar-button" id="ar-cta">
+    Tap here to start AR
+  </button>
 </model-viewer>
-
-<script>
-  const mv = document.getElementById('ar-model');
-
-  // Kick off AR once the GLB is loaded
-  const launch = () => mv.activateAR();
-
-  mv.addEventListener('load', launch);
-  mv.addEventListener('poster-dismissed', launch); 
-  setTimeout(launch, 1500);                        
-</script>
 
 </body>
 </html>
